@@ -31,6 +31,25 @@ public class RecipeControllerTest {
     @Test
     @Transactional
     @Rollback
+    void shouldReturnBadRequestIfNoIngredientsAdded() throws Exception {
+        final var testJson = """
+                {
+                    "name": "Baked Potato",
+                    "ingredients": []
+                }
+                """;
+
+        final var request = post("/api/recipes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(testJson);
+
+        mvc.perform(request)
+                .andExpect(status().is(400));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
     void shouldSaveNewRecipe() throws Exception {
         final var testJson = """
                 {
