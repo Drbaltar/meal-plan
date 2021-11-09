@@ -1,5 +1,6 @@
 package com.drbaltar.mealplanserver.Controllers;
 
+import com.drbaltar.mealplanserver.Models.Ingredient;
 import com.drbaltar.mealplanserver.Models.Recipe;
 import com.drbaltar.mealplanserver.Repositories.RecipeRepository;
 import com.drbaltar.mealplanserver.Views.Views;
@@ -59,10 +60,25 @@ public class RecipeController {
             else
                 errors.append(" and Ingredients list is required!");
             errorFlag = true;
+        } else {
+            validateAllIngredients(newRecipe);
         }
 
         if (errorFlag)
             throw new MissingArgumentsException(errors.toString());
+    }
+
+    private void validateAllIngredients(Recipe newRecipe) {
+        final var ingredients = newRecipe.getIngredients();
+
+        for (Ingredient ingredient : ingredients) {
+            validateIngredient(ingredient);
+        }
+    }
+
+    private void validateIngredient(Ingredient ingredient) {
+        if (ingredient.getName().equals("") || ingredient.getQuantity() <= 0 || ingredient.getUnit().equals(""))
+            throw new MissingArgumentsException("Missing required values in at least one of your ingredient fields!");
     }
 
     @ExceptionHandler(MissingArgumentsException.class)
