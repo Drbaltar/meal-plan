@@ -40,7 +40,8 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
+    ],
+    "max-len": ["error", { "code": 120 }]
   },
   "settings": {
     "import/resolver": {
