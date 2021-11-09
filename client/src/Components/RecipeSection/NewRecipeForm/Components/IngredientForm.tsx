@@ -1,23 +1,41 @@
 import React, { ReactElement, useState } from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { Ingredient } from '../../../../Models/Ingredient';
 
 interface Props {
   onAddIngredient: (ingredient: Ingredient) => void
 }
 
+interface FormValidation {
+  isNameValid: boolean,
+  isQuantityValid: boolean,
+  isUnitsValid: boolean
+}
+
 function IngredientForm({ onAddIngredient }: Props): ReactElement {
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('0');
   const [unit, setUnit] = useState('');
+  const [formValidation, setFormValidation] = useState<FormValidation | null>(null);
+
+  function validateFields(): FormValidation {
+    const newFormValidation: FormValidation = {
+      isNameValid: name.length > 0,
+      isQuantityValid: Number.parseFloat(quantity) > 0,
+      isUnitsValid: unit.length > 0,
+    };
+
+    return newFormValidation;
+  }
 
   const handleAddClick = () => {
-    const quantityAsNumber = Number.parseFloat(quantity);
-    onAddIngredient({ name, quantity: quantityAsNumber, unit });
-    setName('');
-    setQuantity('0');
-    setUnit('');
+    const newFormValidation = validateFields();
+    if (Object.values(newFormValidation).includes(false)) {
+      setFormValidation(newFormValidation);
+    } else {
+      onAddIngredient({ name, quantity: Number.parseFloat(quantity), unit });
+    }
   };
 
   return (
@@ -30,6 +48,7 @@ function IngredientForm({ onAddIngredient }: Props): ReactElement {
         label="Ingredient Name"
         variant="filled"
         sx={{ backgroundColor: 'white' }}
+        error={formValidation != null ? !formValidation.isNameValid : undefined}
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
@@ -38,6 +57,7 @@ function IngredientForm({ onAddIngredient }: Props): ReactElement {
         label="Quantity"
         variant="filled"
         sx={{ backgroundColor: 'white' }}
+        error={formValidation != null ? !formValidation.isQuantityValid : undefined}
         type="number"
         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
         value={quantity}
@@ -48,10 +68,11 @@ function IngredientForm({ onAddIngredient }: Props): ReactElement {
         label="Unit"
         variant="filled"
         sx={{ backgroundColor: 'white' }}
+        error={formValidation != null ? !formValidation.isUnitsValid : undefined}
         value={unit}
         onChange={(e) => setUnit(e.target.value)}
       />
-      <button type="button" onClick={handleAddClick}>Add</button>
+      <Button variant="contained" onClick={handleAddClick}>Add</Button>
     </div>
   );
 }
