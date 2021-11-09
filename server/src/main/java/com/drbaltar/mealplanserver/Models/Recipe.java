@@ -15,11 +15,13 @@ public class Recipe {
     private Long id;
 
     @JsonView(Views.Public.class)
+    @Column(nullable = false)
     private String name;
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     @JsonView(Views.Public.class)
+    @Column(nullable = false)
     private Set<Ingredient> ingredients;
 
     public Recipe() {

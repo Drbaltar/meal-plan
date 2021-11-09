@@ -2,6 +2,7 @@ package com.drbaltar.mealplanserver.Models;
 
 import com.drbaltar.mealplanserver.Views.Views;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 
@@ -18,12 +19,15 @@ public class Ingredient {
     private Recipe recipe;
 
     @JsonView(Views.Public.class)
+    @Column(nullable = false)
     private String name;
 
     @JsonView(Views.Public.class)
+    @Column(nullable = false)
     private float quantity;
 
     @JsonView(Views.Public.class)
+    @Column(nullable = false)
     private String unit;
 
     public Ingredient() {
