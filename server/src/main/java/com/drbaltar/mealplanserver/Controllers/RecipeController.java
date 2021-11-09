@@ -4,7 +4,7 @@ import com.drbaltar.mealplanserver.Models.Recipe;
 import com.drbaltar.mealplanserver.Repositories.RecipeRepository;
 import com.drbaltar.mealplanserver.Views.Views;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.springframework.security.core.parameters.P;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -22,6 +22,7 @@ public class RecipeController {
     @PostMapping
     @JsonView(Views.Public.class)
     public Recipe saveNewRecipe(@RequestBody Recipe newRecipe) {
+        validateRecipeInput(newRecipe);
         return repository.save(newRecipe);
     }
 
@@ -43,4 +44,31 @@ public class RecipeController {
         repository.deleteById(id);
         return "Recipe successfully deleted!";
     }
+
+    private void validateRecipeInput(Recipe newRecipe) {
+        var errors = new StringBuilder();
+        var errorFlag = false;
+
+        if (newRecipe.getName() == null || newRecipe.getName().equals("")) {
+            errors.append("Recipe name is required\n");
+            errorFlag = true;
+        }
+        if (newRecipe.getIngredients() == null || newRecipe.getIngredients().size() == 0) {
+            if (errors.isEmpty())
+                errors.append("Ingredients list is required!\n");
+            else
+                errors.append(" and Ingredients list is required!");
+            errorFlag = true;
+        }
+
+        if (errorFlag)
+            throw new MissingArgumentsException(errors.toString());
+    }
+
+    @ExceptionHandler(MissingArgumentsException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public String handleMissingArguments(MissingArgumentsException exception) {
+        return exception.getMessage();
+    }
+
 }
