@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
+import './App.css';
 
-function App() {
+function App(): ReactElement {
   return (
-    <div />
+    <div>
+      <Link to="/recipes">Recipe List</Link>
+      <Link to="/groceries">Grocery List</Link>
+    </div>
   );
 }
 
