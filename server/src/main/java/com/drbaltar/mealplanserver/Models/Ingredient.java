@@ -2,7 +2,6 @@ package com.drbaltar.mealplanserver.Models;
 
 import com.drbaltar.mealplanserver.Views.Views;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 
@@ -10,25 +9,29 @@ import javax.persistence.*;
 @Table(name = "INGREDIENTS")
 public class Ingredient {
 
+    @JsonView(Views.IngredientPublic.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.RecipePublic.class)
     @Column(nullable = false)
     private String name;
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.RecipePublic.class)
     @Column(nullable = false)
     private float quantity;
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.RecipePublic.class)
     @Column(nullable = false)
     private String unit;
+
+    @JsonView(Views.RecipePublic.class)
+    private boolean hasIngredient;
 
     public Ingredient() {
     }
@@ -39,12 +42,12 @@ public class Ingredient {
         this.unit = unit;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Recipe getRecipe() {
@@ -77,5 +80,13 @@ public class Ingredient {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public boolean hasIngredient() {
+        return hasIngredient;
+    }
+
+    public void setHasIngredient(boolean hasIngredient) {
+        this.hasIngredient = hasIngredient;
     }
 }
