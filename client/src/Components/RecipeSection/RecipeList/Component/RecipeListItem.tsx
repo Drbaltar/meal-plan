@@ -6,14 +6,22 @@ import {
 import { Recipe } from '../../../../Models/Recipe';
 
 interface Props {
-  recipe: Recipe,
-  onSelectRecipe: (recipe: Recipe) => void
+    recipe: Recipe,
+    onSelectRecipe: (recipe: Recipe) => void
 }
 
 function RecipeListItem({ recipe, onSelectRecipe }: Props): ReactElement {
+  let selectedStyle;
+  if (recipe.isPlanned) {
+    selectedStyle = {
+      border: '5px solid black',
+      background: 'green',
+      color: 'white',
+    };
+  }
   return (
-    <Grid item xs={3}>
-      <Card sx={{ height: 300 }}>
+    <Grid item>
+      <Card sx={{ minWidth: '250px', ...selectedStyle }}>
         <CardActionArea sx={{ height: '100%' }} onClick={() => onSelectRecipe(recipe)}>
           <CardHeader title={recipe.name} />
         </CardActionArea>
@@ -30,6 +38,7 @@ RecipeListItem.propTypes = {
       quantity: PropTypes.number.isRequired,
       unit: PropTypes.string.isRequired,
     })),
+    isPlanned: PropTypes.bool.isRequired,
   }).isRequired,
   onSelectRecipe: PropTypes.func.isRequired,
 };
