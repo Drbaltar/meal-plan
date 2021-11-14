@@ -15,6 +15,12 @@ interface Props {
 }
 
 function DetailedRecipe({ recipe, onReturnToList, onUpdateList }: Props): ReactElement {
+  const handleSelectToggle = () => {
+    axios.patch(`/api/recipes/${recipe.id}`, { isPlanned: !recipe.isPlanned })
+      .then(onUpdateList)
+      .then(onReturnToList);
+  };
+
   const handleDeleteRecipe = () => {
     axios.delete(`/api/recipes/${recipe.id}`)
       .then(onUpdateList)
@@ -25,11 +31,36 @@ function DetailedRecipe({ recipe, onReturnToList, onUpdateList }: Props): ReactE
     return recipe.ingredients.map((ingredient) => {
       const text = `${ingredient.name}, ${ingredient.quantity} ${ingredient.unit}`;
       return (
-        <Typography variant="h6">
+        <Typography key={text} variant="h6">
           <li>{text}</li>
         </Typography>
       );
     });
+  }
+
+  function renderSelectButton() {
+    return (
+      <Button
+        variant="contained"
+        sx={{ marginBottom: '25px', marginLeft: '15px' }}
+        onClick={handleSelectToggle}
+      >
+        Select for Plan
+      </Button>
+    );
+  }
+
+  function renderRemoveButton() {
+    return (
+      <Button
+        variant="contained"
+        color="error"
+        sx={{ marginBottom: '25px', marginLeft: '15px' }}
+        onClick={handleSelectToggle}
+      >
+        Remove from Plan
+      </Button>
+    );
   }
 
   return (
@@ -42,7 +73,7 @@ function DetailedRecipe({ recipe, onReturnToList, onUpdateList }: Props): ReactE
             <Typography variant="h4">Ingredients</Typography>
             {renderIngredients()}
           </CardContent>
-          <Button variant="contained" sx={{ marginBottom: '25px', marginLeft: '15px' }}>Select</Button>
+          {recipe.isPlanned ? renderRemoveButton() : renderSelectButton()}
           <IconButton
             edge="end"
             aria-label="delete"
@@ -57,7 +88,6 @@ function DetailedRecipe({ recipe, onReturnToList, onUpdateList }: Props): ReactE
         </Card>
       </Container>
     </div>
-
   );
 }
 
@@ -70,6 +100,7 @@ DetailedRecipe.propTypes = {
       quantity: PropTypes.number.isRequired,
       unit: PropTypes.string.isRequired,
     })),
+    isPlanned: PropTypes.bool.isRequired,
   }).isRequired,
   onReturnToList: PropTypes.func.isRequired,
   onUpdateList: PropTypes.func.isRequired,
