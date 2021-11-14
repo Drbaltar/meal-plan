@@ -8,39 +8,54 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/recipes")
 public class RecipeController {
 
-    private RecipeRepository repository;
+    private final RecipeRepository repository;
 
     public RecipeController(RecipeRepository repository) {
         this.repository = repository;
     }
 
     @PostMapping
-    @JsonView(Views.Public.class)
+    @JsonView(Views.RecipePublic.class)
     public Recipe saveNewRecipe(@RequestBody Recipe newRecipe) {
         validateRecipeInput(newRecipe);
         return repository.save(newRecipe);
     }
 
+    @PatchMapping("/{id}")
+    @JsonView(Views.RecipePublic.class)
+    public Recipe updateRecipeByID(@PathVariable long id, @RequestBody HashMap<String, String> updates) {
+        final var recipeToUpdate = repository.findById(id);
+        return recipeToUpdate.map(recipe -> {
+            updates.forEach((key, value) -> {
+                if (key.equals("isPlanned"))
+                    recipe.setPlanned(Boolean.parseBoolean(value));
+            });
+            repository.save(recipe);
+            return recipe;
+        }).orElseThrow(RecipeNotFoundException::new);
+    }
+
     @GetMapping("/{id}")
-    @JsonView(Views.Public.class)
+    @JsonView(Views.RecipePublic.class)
     public Optional<Recipe> getRecipeByID(@PathVariable long id) {
         return repository.findById(id);
     }
 
     @GetMapping
-    @JsonView(Views.Public.class)
+    @JsonView(Views.RecipePublic.class)
     public Iterable<Recipe> getAllRecipes() {
         return repository.findAll();
     }
 
     @DeleteMapping("/{id}")
-    @JsonView(Views.Public.class)
+    @JsonView(Views.RecipePublic.class)
     public String deleteRecipeByID(@PathVariable long id) {
         repository.deleteById(id);
         return "Recipe successfully deleted!";
@@ -85,6 +100,12 @@ public class RecipeController {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public String handleMissingArguments(MissingArgumentsException exception) {
         return exception.getMessage();
+    }
+
+    @ExceptionHandler(RecipeNotFoundException.class)
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public String handleMissingRecipeEntry() {
+        return "Recipe entry not found!";
     }
 
 }
