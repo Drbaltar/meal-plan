@@ -11,18 +11,21 @@ import java.util.Set;
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(Views.Public.class)
+    @JsonView(Views.RecipePublic.class)
     private Long id;
 
-    @JsonView(Views.Public.class)
+    @JsonView(Views.RecipePublic.class)
     @Column(nullable = false)
     private String name;
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id")
-    @JsonView(Views.Public.class)
+    @JoinColumn(name = "recipe_id")
+    @JsonView(Views.RecipePublic.class)
     @Column(nullable = false)
     private Set<Ingredient> ingredients;
+
+    @JsonView(Views.RecipePublic.class)
+    private boolean isPlanned;
 
     public Recipe() {
     }
@@ -62,5 +65,13 @@ public class Recipe {
 
     public void removeIngredient(Ingredient ingredientToRemove) {
         ingredients.remove(ingredientToRemove);
+    }
+
+    public boolean isPlanned() {
+        return isPlanned;
+    }
+
+    public void setPlanned(boolean planned) {
+        isPlanned = planned;
     }
 }
