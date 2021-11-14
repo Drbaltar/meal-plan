@@ -122,6 +122,26 @@ public class RecipeControllerTest {
         assertTrue(repository.findById(testRecipe.getId()).isEmpty());
     }
 
+    @Test
+    @Transactional
+    @Rollback
+    void shouldBeAbleToSetRecipeToBeingPlanned() throws Exception {
+        final Recipe testRecipe = saveTestRecipe();
+        final var testJSON = """
+                {
+                    "isPlanned": true
+                }
+                """;
+
+        final var request = patch("/api/recipes/%d".formatted(testRecipe.getId()))
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content(testJSON);
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isPlanned").value(true));
+    }
+
     private Recipe saveTestRecipe() {
         final var ingredients = new HashSet<Ingredient>();
         ingredients.add(new Ingredient("Flour", 1, "cup"));
