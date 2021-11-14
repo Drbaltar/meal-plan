@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Fab, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import PropTypes from 'prop-types';
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
+import { Link } from 'react-router-dom';
 import RecipeListItem from './Component/RecipeListItem';
 import { Recipe } from '../../../Models/Recipe';
 import DetailedRecipe from './Component/DetailedRecipe';
@@ -47,10 +49,21 @@ function RecipeList({ onNewRecipe }: Props): ReactElement {
           color="primary"
           aria-label="add"
           onClick={onNewRecipe}
-          sx={{ position: 'absolute', bottom: '40px' }}
+          sx={{ position: 'fixed', bottom: '40px', border: '2px solid white' }}
         >
           <AddIcon />
         </Fab>
+        <Link to="/groceries">
+          <Fab
+            color="secondary"
+            aria-label="grocery-list"
+            sx={{
+              position: 'fixed', bottom: '40px', right: '30px', border: '2px solid white',
+            }}
+          >
+            <LocalGroceryStoreIcon />
+          </Fab>
+        </Link>
       </>
     );
   }
