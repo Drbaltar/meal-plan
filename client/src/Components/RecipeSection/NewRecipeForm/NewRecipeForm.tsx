@@ -22,7 +22,6 @@ function NewRecipeForm({ onReturnToList }: Props): ReactElement {
 
   const handleAddIngredient = (newIngredient: Ingredient) => {
     setIngredients([...ingredients, newIngredient]);
-    setIsIngredientFormShown(false);
   };
 
   const handleDeleteIngredient = (index: number) => {

@@ -1,16 +1,16 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, TextField } from '@mui/material';
 import { Ingredient } from '../../../../Models/Ingredient';
 
 interface Props {
-  onAddIngredient: (ingredient: Ingredient) => void
+    onAddIngredient: (ingredient: Ingredient) => void
 }
 
 interface FormValidation {
-  isNameValid: boolean,
-  isQuantityValid: boolean,
-  isUnitsValid: boolean
+    isNameValid: boolean,
+    isQuantityValid: boolean,
+    isUnitsValid: boolean
 }
 
 function IngredientForm({ onAddIngredient }: Props): ReactElement {
@@ -18,6 +18,7 @@ function IngredientForm({ onAddIngredient }: Props): ReactElement {
   const [quantity, setQuantity] = useState('0');
   const [unit, setUnit] = useState('');
   const [formValidation, setFormValidation] = useState<FormValidation | null>(null);
+  const ingredientName = useRef<HTMLDivElement | null>(null);
 
   function validateFields(): FormValidation {
     const newFormValidation: FormValidation = {
@@ -35,6 +36,15 @@ function IngredientForm({ onAddIngredient }: Props): ReactElement {
       setFormValidation(newFormValidation);
     } else {
       onAddIngredient({ name, quantity: Number.parseFloat(quantity), unit });
+      setFormValidation(null);
+      setName('');
+      setQuantity('0');
+      setUnit('');
+      if (ingredientName) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        ingredientName.current.focus();
+      }
     }
   };
 
@@ -44,6 +54,8 @@ function IngredientForm({ onAddIngredient }: Props): ReactElement {
     }}
     >
       <TextField
+        autoFocus
+        inputRef={ingredientName}
         id="ingredient-name"
         label="Ingredient Name"
         variant="filled"
