@@ -33,7 +33,7 @@ function NewRecipeForm({ onReturnToList }: Props): ReactElement {
   const handleRecipeSave = () => {
     axios.post('/api/recipes', { name, imageURL, ingredients })
       .then(onReturnToList)
-      .catch((error) => setErrorMessage(error.response.data));
+      .catch((error) => setErrorMessage(error.response.data.error || error.response.data));
   };
 
   function renderIngredientList() {
