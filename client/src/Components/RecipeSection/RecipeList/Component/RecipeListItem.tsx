@@ -1,9 +1,10 @@
 import React, { ReactElement } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Card, CardActionArea, CardHeader, Grid,
+  Card, CardActionArea, CardContent, CardHeader, CardMedia, Grid,
 } from '@mui/material';
 import { Recipe } from '../../../../Models/Recipe';
+import defaultIcon from './dish.png';
 
 interface Props {
     recipe: Recipe,
@@ -21,9 +22,15 @@ function RecipeListItem({ recipe, onSelectRecipe }: Props): ReactElement {
   }
   return (
     <Grid item>
-      <Card sx={{ minWidth: '250px', ...selectedStyle }}>
+      <Card sx={{ width: '250px', textAlign: 'center', ...selectedStyle }}>
         <CardActionArea sx={{ height: '100%' }} onClick={() => onSelectRecipe(recipe)}>
-          <CardHeader title={recipe.name} />
+          <CardMedia
+            component="img"
+            height="194"
+            image={recipe.imageURL ? recipe.imageURL : defaultIcon}
+            alt={recipe.name}
+          />
+          <CardContent sx={{ fontSize: 'medium' }}>{recipe.name}</CardContent>
         </CardActionArea>
       </Card>
     </Grid>
@@ -39,6 +46,7 @@ RecipeListItem.propTypes = {
       unit: PropTypes.string.isRequired,
     })),
     isPlanned: PropTypes.bool.isRequired,
+    imageURL: PropTypes.string,
   }).isRequired,
   onSelectRecipe: PropTypes.func.isRequired,
 };

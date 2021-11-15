@@ -4,6 +4,7 @@ import com.drbaltar.mealplanserver.Views.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.net.URL;
 import java.util.Set;
 
 @Entity
@@ -26,6 +27,9 @@ public class Recipe {
 
     @JsonView(Views.RecipePublic.class)
     private boolean isPlanned;
+
+    @JsonView(Views.RecipePublic.class)
+    private URL imageURL;
 
     public Recipe() {
     }
@@ -73,5 +77,13 @@ public class Recipe {
 
     public void setPlanned(boolean planned) {
         isPlanned = planned;
+    }
+
+    public URL getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(URL imageURL) {
+        this.imageURL = imageURL;
     }
 }

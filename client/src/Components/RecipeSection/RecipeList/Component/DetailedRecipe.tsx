@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Card, CardContent, Container, IconButton, Typography,
+  Button, Card, CardContent, CardMedia, Container, IconButton, Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -63,12 +63,27 @@ function DetailedRecipe({ recipe, onReturnToList, onUpdateList }: Props): ReactE
     );
   }
 
+  function getCardMedia() {
+    if (recipe.imageURL) {
+      return (
+        <CardMedia
+          component="img"
+          height="100%"
+          image={recipe.imageURL}
+          alt={recipe.name}
+        />
+      );
+    }
+    return null;
+  }
+
   return (
     <div>
       <Button variant="contained" sx={{ marginBottom: '15px' }} onClick={onReturnToList}>Return to List</Button>
       <Container maxWidth="md">
         <Card>
           <CardContent sx={{ margin: '15px' }}>
+            {getCardMedia()}
             <Typography sx={{ textAlign: 'center' }} variant="h3">{recipe.name}</Typography>
             <Typography variant="h4">Ingredients</Typography>
             {renderIngredients()}
@@ -101,6 +116,7 @@ DetailedRecipe.propTypes = {
       unit: PropTypes.string.isRequired,
     })),
     isPlanned: PropTypes.bool.isRequired,
+    imageURL: PropTypes.string,
   }).isRequired,
   onReturnToList: PropTypes.func.isRequired,
   onUpdateList: PropTypes.func.isRequired,
