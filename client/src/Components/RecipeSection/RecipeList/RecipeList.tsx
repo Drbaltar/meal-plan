@@ -14,17 +14,17 @@ interface Props {
 }
 
 function RecipeList({ onNewRecipe }: Props): ReactElement {
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState<Array<Recipe>>([]);
   const [currentRecipe, setCurrentRecipe] = useState<Recipe | null>(null);
-
-  const handleUpdateList = () => {
-    axios.get('/api/recipes')
-      .then((results) => setRecipes(results.data));
-  };
 
   useEffect(() => {
     handleUpdateList();
   }, []);
+
+  const handleUpdateList = () => {
+    axios.get('/api/recipes')
+      .then((results) => setRecipes(createSortedRecipeList(results.data)));
+  };
 
   const handleSelectRecipe = (recipe: Recipe) => {
     setCurrentRecipe(recipe);
@@ -71,9 +71,28 @@ function RecipeList({ onNewRecipe }: Props): ReactElement {
   return (
     <div style={{ margin: '30px' }}>
       {currentRecipe === null ? renderListView()
-        : <DetailedRecipe recipe={currentRecipe} onReturnToList={handleReturnToList} onUpdateList={handleUpdateList} />}
+        : (
+          <DetailedRecipe
+            recipe={currentRecipe}
+            onReturnToList={handleReturnToList}
+            onUpdateList={handleUpdateList}
+          />
+        )}
     </div>
   );
+}
+
+function createSortedRecipeList(recipes: Array<Recipe>): Array<Recipe> {
+  const tempArray = [...recipes];
+  return tempArray.sort(compareRecipes);
+}
+
+function compareRecipes(a: Recipe, b: Recipe): number {
+  if (a.isPlanned && !b.isPlanned) return -1;
+  if (b.isPlanned && !a.isPlanned) return 1;
+  if (a.name < b.name) return -1;
+  if (a.name > b.name) return 1;
+  return 0;
 }
 
 RecipeList.propTypes = {
