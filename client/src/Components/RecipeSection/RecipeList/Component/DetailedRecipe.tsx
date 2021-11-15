@@ -84,8 +84,8 @@ function DetailedRecipe({ recipe, onReturnToList, onUpdateList }: Props): ReactE
         <Card>
           <CardContent sx={{ margin: '15px' }}>
             {getCardMedia()}
-            <Typography sx={{ textAlign: 'center' }} variant="h3">{recipe.name}</Typography>
-            <Typography variant="h4">Ingredients</Typography>
+            <Typography sx={{ textAlign: 'center', marginBottom: '1rem' }} variant="h5">{recipe.name}</Typography>
+            <Typography variant="h5" fontWeight="bold">Ingredients</Typography>
             {renderIngredients()}
           </CardContent>
           {recipe.isPlanned ? renderRemoveButton() : renderSelectButton()}

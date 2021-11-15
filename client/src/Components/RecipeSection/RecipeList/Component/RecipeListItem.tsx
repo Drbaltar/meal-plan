@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Card, CardActionArea, CardContent, CardHeader, CardMedia, Grid,
+  Card, CardActionArea, CardContent, CardMedia, Grid,
 } from '@mui/material';
 import { Recipe } from '../../../../Models/Recipe';
 import defaultIcon from './dish.png';
@@ -15,7 +15,7 @@ function RecipeListItem({ recipe, onSelectRecipe }: Props): ReactElement {
   let selectedStyle;
   if (recipe.isPlanned) {
     selectedStyle = {
-      border: '5px solid black',
+      outline: '5px solid black',
       background: 'green',
       color: 'white',
     };
@@ -29,6 +29,7 @@ function RecipeListItem({ recipe, onSelectRecipe }: Props): ReactElement {
             height="194"
             image={recipe.imageURL ? recipe.imageURL : defaultIcon}
             alt={recipe.name}
+            sx={{ backgroundColor: 'white' }}
           />
           <CardContent sx={{ fontSize: 'medium' }}>{recipe.name}</CardContent>
         </CardActionArea>
