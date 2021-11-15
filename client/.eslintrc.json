@@ -22,9 +22,6 @@
   ],
   "rules": {
     "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": [
-      "error"
-    ],
     "react/jsx-filename-extension": [
       "warn",
       {
@@ -40,7 +37,8 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
+    ],
+    "max-len": ["error", { "code": 120 }]
   },
   "settings": {
     "import/resolver": {
