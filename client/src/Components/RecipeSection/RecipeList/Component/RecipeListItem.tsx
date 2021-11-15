@@ -32,7 +32,15 @@ function RecipeListItem({ recipe, onSelectRecipe, isImageShown }: Props): ReactE
             alt={recipe.name}
             sx={{ backgroundColor: 'white' }}
           />
-          <CardContent sx={{ fontSize: 'medium' }}>{recipe.name}</CardContent>
+          <CardContent sx={{
+            fontSize: 'medium',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+          >
+            {recipe.name}
+          </CardContent>
         </CardActionArea>
       </Card>
     </Grid>
