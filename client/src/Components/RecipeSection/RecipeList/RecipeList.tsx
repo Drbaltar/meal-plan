@@ -44,7 +44,9 @@ function RecipeList({ onNewRecipe }: Props): ReactElement {
     setCurrentRecipe(null);
   };
 
-  const renderRecipeList = () => recipes.filter((recipe) => recipe.name.includes(filter)).map((recipe: Recipe) => {
+  const filterByRecipeName = (recipe: Recipe) => recipe.name.toLowerCase().includes(filter.toLowerCase());
+
+  const renderRecipeList = () => recipes.filter(filterByRecipeName).map((recipe: Recipe) => {
     const { id } = recipe;
     return (
       <RecipeListItem
