@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -110,6 +111,12 @@ public class RecipeController {
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public String handleMissingRecipeEntry() {
         return "Recipe entry not found!";
+    }
+
+    @ExceptionHandler(MalformedURLException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public String handleInvalidImageURL() {
+        return "Input image URL is not a valid URL!";
     }
 
 }
