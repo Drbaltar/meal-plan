@@ -9,3 +9,13 @@ body{
     background-size: cover;
     height: 100vh;
 }
+
+.recipe-image-open {
+    height: 194px;
+    transition: height 0.5s;
+}
+
+.recipe-image-closed {
+    height: 0;
+    transition: height 0.5s;
+}
