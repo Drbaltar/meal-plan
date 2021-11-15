@@ -8,10 +8,11 @@ import defaultIcon from './dish.png';
 
 interface Props {
     recipe: Recipe,
-    onSelectRecipe: (recipe: Recipe) => void
+    onSelectRecipe: (recipe: Recipe) => void,
+    isImageShown: boolean
 }
 
-function RecipeListItem({ recipe, onSelectRecipe }: Props): ReactElement {
+function RecipeListItem({ recipe, onSelectRecipe, isImageShown }: Props): ReactElement {
   let selectedStyle;
   if (recipe.isPlanned) {
     selectedStyle = {
@@ -25,8 +26,8 @@ function RecipeListItem({ recipe, onSelectRecipe }: Props): ReactElement {
       <Card sx={{ width: '250px', textAlign: 'center', ...selectedStyle }}>
         <CardActionArea sx={{ height: '100%' }} onClick={() => onSelectRecipe(recipe)}>
           <CardMedia
+            className={isImageShown ? 'recipe-image-open' : 'recipe-image-closed'}
             component="img"
-            height="194"
             image={recipe.imageURL ? recipe.imageURL : defaultIcon}
             alt={recipe.name}
             sx={{ backgroundColor: 'white' }}
@@ -50,5 +51,6 @@ RecipeListItem.propTypes = {
     imageURL: PropTypes.string,
   }).isRequired,
   onSelectRecipe: PropTypes.func.isRequired,
+  isImageShown: PropTypes.bool.isRequired,
 };
 export default RecipeListItem;
