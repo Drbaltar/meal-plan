@@ -34,8 +34,12 @@ public class RecipeController {
         final var recipeToUpdate = repository.findById(id);
         return recipeToUpdate.map(recipe -> {
             updates.forEach((key, value) -> {
-                if (key.equals("isPlanned"))
-                    recipe.setPlanned(Boolean.parseBoolean(value));
+                if (key.equals("isPlanned")) {
+                    final var isPlannedUpdate = Boolean.parseBoolean(value);
+                    recipe.setPlanned(isPlannedUpdate);
+                    if (!isPlannedUpdate)
+                        recipe.getIngredients().forEach(ingredient -> ingredient.setHasIngredient(false));
+                }
             });
             repository.save(recipe);
             return recipe;

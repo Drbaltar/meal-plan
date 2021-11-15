@@ -1,7 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import {
-  Alert,
-  Box, Button, Grid, List, TextField, Typography,
+  Alert, Box, Button, List, TextField, Typography,
 } from '@mui/material';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import axios from 'axios';
@@ -11,11 +10,12 @@ import { Ingredient } from '../../../Models/Ingredient';
 import IngredientEntry from './Components/IngredientEntry';
 
 interface Props {
-  onReturnToList: () => void
+    onReturnToList: () => void
 }
 
 function NewRecipeForm({ onReturnToList }: Props): ReactElement {
   const [name, setName] = useState('');
+  const [imageURL, setImageURL] = useState('');
   const [ingredients, setIngredients] = useState<Array<Ingredient>>([]);
   const [isIngredientFormShown, setIsIngredientFormShown] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -31,9 +31,9 @@ function NewRecipeForm({ onReturnToList }: Props): ReactElement {
   };
 
   const handleRecipeSave = () => {
-    axios.post('/api/recipes', { name, ingredients })
+    axios.post('/api/recipes', { name, imageURL, ingredients })
       .then(onReturnToList)
-      .catch((error) => setErrorMessage(error.response.data));
+      .catch((error) => setErrorMessage(error.response.data.error || error.response.data));
   };
 
   function renderIngredientList() {
@@ -62,28 +62,39 @@ function NewRecipeForm({ onReturnToList }: Props): ReactElement {
   return (
     <Box sx={{
       padding: '20px',
-      maxWidth: '800',
+      width: '800',
       backgroundColor: 'rgba(0,0,0,.5)',
       color: 'white',
     }}
     >
-      <Grid columns={1}>
+      <div>
         <Typography variant="h3">New Recipe</Typography>
-        <TextField
-          id="recipe-name"
-          label="Recipe Name"
-          variant="filled"
-          sx={{ marginTop: '15px', backgroundColor: 'white' }}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <div style={{ display: 'flex', gap: '15px' }}>
+          <TextField
+            id="recipe-name"
+            label="Recipe Name"
+            variant="filled"
+            sx={{ marginTop: '15px', backgroundColor: 'white' }}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            id="recipe-image"
+            label="Image URL (Optional)"
+            variant="filled"
+            sx={{ marginTop: '15px', backgroundColor: 'white' }}
+            value={imageURL}
+            onChange={(e) => setImageURL(e.target.value)}
+          />
+        </div>
+
         <Typography variant="h5" sx={{ paddingY: '15px' }}>Ingredient List</Typography>
         <List sx={{ maxWidth: '250px' }}>
           {renderIngredientList()}
         </List>
         {isIngredientFormShown ? renderIngredientForm() : renderAddIcon()}
-      </Grid>
-      {errorMessage !== '' ? renderErrorMessage() : null}
+        {errorMessage !== '' ? renderErrorMessage() : null}
+      </div>
       <Button
         variant="contained"
         onClick={handleRecipeSave}

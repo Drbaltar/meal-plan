@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
 import { Ingredient } from '../../Models/Ingredient';
 
 function GroceryList(): ReactElement {
@@ -33,13 +33,15 @@ function GroceryList(): ReactElement {
       {groceryItems.length > 0
         ? renderGroceryList(groceryItems, handleIngredientUpdate)
         : <h3>No Grocery Items Found!</h3>}
-      <Link to="/">
+      <Link to="/recipes">
         <Fab
-          color="primary"
+          color="secondary"
           aria-label="grocery-list"
-          sx={{ position: 'fixed', bottom: '40px', border: '2px solid white' }}
+          sx={{
+            position: 'fixed', bottom: '40px', right: '30px', border: '2px solid white',
+          }}
         >
-          <HomeIcon />
+          <FastfoodIcon />
         </Fab>
       </Link>
     </div>

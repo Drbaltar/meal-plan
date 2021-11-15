@@ -1,29 +1,38 @@
 import React, { ReactElement } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Card, CardActionArea, CardHeader, Grid,
+  Card, CardActionArea, CardContent, CardMedia, Grid,
 } from '@mui/material';
 import { Recipe } from '../../../../Models/Recipe';
+import defaultIcon from './dish.png';
 
 interface Props {
     recipe: Recipe,
-    onSelectRecipe: (recipe: Recipe) => void
+    onSelectRecipe: (recipe: Recipe) => void,
+    isImageShown: boolean
 }
 
-function RecipeListItem({ recipe, onSelectRecipe }: Props): ReactElement {
+function RecipeListItem({ recipe, onSelectRecipe, isImageShown }: Props): ReactElement {
   let selectedStyle;
   if (recipe.isPlanned) {
     selectedStyle = {
-      border: '5px solid black',
+      outline: '5px solid black',
       background: 'green',
       color: 'white',
     };
   }
   return (
     <Grid item>
-      <Card sx={{ minWidth: '250px', ...selectedStyle }}>
+      <Card sx={{ width: '250px', textAlign: 'center', ...selectedStyle }}>
         <CardActionArea sx={{ height: '100%' }} onClick={() => onSelectRecipe(recipe)}>
-          <CardHeader title={recipe.name} />
+          <CardMedia
+            className={isImageShown ? 'recipe-image-open' : 'recipe-image-closed'}
+            component="img"
+            image={recipe.imageURL ? recipe.imageURL : defaultIcon}
+            alt={recipe.name}
+            sx={{ backgroundColor: 'white' }}
+          />
+          <CardContent sx={{ fontSize: 'medium' }}>{recipe.name}</CardContent>
         </CardActionArea>
       </Card>
     </Grid>
@@ -39,7 +48,9 @@ RecipeListItem.propTypes = {
       unit: PropTypes.string.isRequired,
     })),
     isPlanned: PropTypes.bool.isRequired,
+    imageURL: PropTypes.string,
   }).isRequired,
   onSelectRecipe: PropTypes.func.isRequired,
+  isImageShown: PropTypes.bool.isRequired,
 };
 export default RecipeListItem;
